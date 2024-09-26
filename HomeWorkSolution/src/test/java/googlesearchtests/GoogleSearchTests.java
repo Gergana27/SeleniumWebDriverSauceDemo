@@ -16,46 +16,7 @@ import java.util.List;
 public class GoogleSearchTests {
 
     @Test
-    public void searchByTermBase() {
-
-        //Initialize the ChromeDriver
-        WebDriver driver = new ChromeDriver();
-        // WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20)); //Explicit wait - This will wait until a condition is met or reaching the timeout
-
-        //Make it full screen
-        driver.manage().window().maximize();
-
-        //Go to the BaseURL
-        driver.get("https://google.com");
-
-        //Accept cookies
-        WebElement acceptCookieBtn = driver.findElement(By.id("L2AGLb"));
-        acceptCookieBtn.click();
-
-        //Type in the search field
-        WebElement searchField = driver.findElement(By.name("q"));
-        searchField.sendKeys("Telerik academy Alpha");
-
-        //Submit the form
-        searchField.sendKeys(Keys.ENTER);
-
-        //Assert the results
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10)); //Implicit wait of 10 seconds
-        List<WebElement> resultsList = driver.findElements(By.xpath("//h3"));
-
-        WebElement firstResult = resultsList.get(0);
-        //wait.until(ExpectedConditions.invisibilityOf(firstResult));
-
-        var actualResult = firstResult.getText();
-
-        Assertions.assertEquals(actualResult, "IT Career Start in 6 Months - Telerik Academy Alpha");
-
-        //tearDown()
-        driver.close();
-    }
-
-    @Test
-    public void searchByTermOptimized() {
+    public void searchForTelerikAcademyAlpha() {
         //Initialize the ChromeDriver
         WebDriver driver = new ChromeDriver();
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20)); //Explicit wait - This will wait until a condition is met or reaching the timeout
@@ -88,6 +49,45 @@ public class GoogleSearchTests {
         var actualResult = firstResult.getText();
 
         Assertions.assertEquals(actualResult, "IT Career Start in 6 Months - Telerik Academy Alpha");
+
+        //tearDown()
+        driver.close();
+    }
+
+    @Test
+    public void searchForTelerik() {
+        //Initialize the ChromeDriver
+        WebDriver driver = new ChromeDriver();
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20)); //Explicit wait - This will wait until a condition is met or reaching the timeout
+
+        //Make it full screen
+        driver.manage().window().maximize();
+
+        //Go to the BaseURL
+        driver.get("https://google.com");
+
+        //Accept cookies
+        WebElement acceptCookieBtn = driver.findElement(By.id("L2AGLb"));
+        acceptCookieBtn.click();
+
+        //Type in the search field
+        WebElement searchField = driver.findElement(By.name("q"));
+        wait.until(ExpectedConditions.visibilityOf(searchField)); //This will periodically check if the element is visible until true or reach the timeout
+        searchField.sendKeys("Telerik");
+
+        //Submit the form
+        searchField.sendKeys(Keys.ENTER);
+
+        //Wait for a specific web element
+        WebElement resultsNavigation = driver.findElement(By.xpath("//div[@role='navigation']"));
+        wait.until(ExpectedConditions.visibilityOf(resultsNavigation));
+
+        //Assert the results
+        List<WebElement> resultsList = driver.findElements(By.xpath("//h3"));
+        WebElement firstResult = resultsList.get(0);
+        var actualResult = firstResult.getText();
+
+        Assertions.assertEquals("Telerik Academy: Programming and Digital Training", actualResult );
 
         //tearDown()
         driver.close();
